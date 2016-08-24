@@ -138,6 +138,7 @@ private:
     int32_t _new_course;                                        ///< course parsed from a term
     uint16_t _new_hdop;                                                 ///< HDOP parsed from a term
     uint8_t _new_satellite_count;                       ///< satellite count parsed from a term
+	uint8_t _new_state;
 
     uint32_t _last_RMC_ms = 0;
     uint32_t _last_GGA_ms = 0;
