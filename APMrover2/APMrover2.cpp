@@ -75,9 +75,6 @@ const AP_Scheduler::Task Rover::scheduler_tasks[] = {
     SCHED_TASK(one_second_loop,         1,   3000),
     SCHED_TASK(compass_cal_update,     50,    100), 
     SCHED_TASK(accel_cal_update,       10,    100),
-#if FRSKY_TELEM_ENABLED == ENABLED
-    SCHED_TASK(frsky_telemetry_send,    5,    100),
-#endif
     SCHED_TASK(dataflash_periodic,     50,    300),
     SCHED_TASK(button_update,          5,     100),
 };
@@ -372,7 +369,7 @@ void Rover::update_GPS_10Hz(void)
             // We countdown N number of good GPS fixes
             // so that the altitude is more accurate
             // -------------------------------------
-            if (current_loc.lat == 0) {
+            if (current_loc.lat == 0 && current_loc.lng == 0) {
                 ground_start_count = 20;
             } else {
                 init_home();

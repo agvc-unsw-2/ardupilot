@@ -86,23 +86,23 @@ bool Copter::check_if_auxsw_mode_used(uint8_t auxsw_mode_check)
 // check_duplicate_auxsw - Check to see if any Aux Switch Functions are duplicated
 bool Copter::check_duplicate_auxsw(void)
 {
-    bool ret = ((g.ch7_option != AUXSW_DO_NOTHING) && (g.ch7_option == g.ch8_option ||
-                g.ch7_option == g.ch9_option || g.ch7_option == g.ch10_option ||
-                g.ch7_option == g.ch11_option || g.ch7_option == g.ch12_option));
+    uint8_t auxsw_option_counts[AUXSW_SWITCH_MAX] = {};
+    auxsw_option_counts[g.ch7_option]++;
+    auxsw_option_counts[g.ch8_option]++;
+    auxsw_option_counts[g.ch9_option]++;
+    auxsw_option_counts[g.ch10_option]++;
+    auxsw_option_counts[g.ch11_option]++;
+    auxsw_option_counts[g.ch12_option]++;
 
-    ret = ret || ((g.ch8_option != AUXSW_DO_NOTHING) && (g.ch8_option == g.ch9_option ||
-                    g.ch8_option == g.ch10_option || g.ch8_option == g.ch11_option ||
-                    g.ch8_option == g.ch12_option));
-
-    ret = ret || ((g.ch9_option != AUXSW_DO_NOTHING) && (g.ch9_option == g.ch10_option ||
-                    g.ch9_option == g.ch11_option || g.ch9_option == g.ch12_option));
-
-    ret = ret || ((g.ch10_option != AUXSW_DO_NOTHING) && (g.ch10_option == g.ch11_option ||
-                    g.ch10_option == g.ch12_option));
-
-    ret = ret || ((g.ch11_option != AUXSW_DO_NOTHING) && (g.ch11_option == g.ch12_option));
-
-    return ret;
+    for (uint8_t i=0; i<sizeof(auxsw_option_counts); i++) {
+        if (i == AUXSW_DO_NOTHING) {
+            continue;
+        }
+        if (auxsw_option_counts[i] > 1) {
+            return true;
+        }
+    }
+   return false;
 }
 
 void Copter::reset_control_switch()
@@ -224,7 +224,6 @@ void Copter::init_aux_switch_function(int8_t ch_option, uint8_t ch_flag)
         case AUXSW_SIMPLE_MODE:
         case AUXSW_RANGEFINDER:
         case AUXSW_FENCE:
-        case AUXSW_RESETTOARMEDYAW:
         case AUXSW_SUPERSIMPLE_MODE:
         case AUXSW_ACRO_TRAINER:
         case AUXSW_EPM:
@@ -368,14 +367,6 @@ void Copter::do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
             }
             break;
 #endif
-        // To-Do: add back support for this feature
-        //case AUXSW_RESETTOARMEDYAW:
-        //    if (ch_flag == AUX_SWITCH_HIGH) {
-        //        set_yaw_mode(YAW_RESETTOARMEDYAW);
-        //    }else{
-        //        set_yaw_mode(YAW_HOLD);
-        //    }
-        //    break;
 
         case AUXSW_ACRO_TRAINER:
             switch(ch_flag) {

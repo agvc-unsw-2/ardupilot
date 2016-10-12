@@ -102,7 +102,7 @@ void Plane::init_ardupilot()
     set_control_channels();
     init_rc_out_main();
     
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
+#if HAVE_PX4_MIXER
     if (!quadplane.enable) {
         // this must be before BoardConfig.init() so if
         // BRD_SAFETYENABLE==0 then we don't have safety off yet. For
@@ -159,7 +159,10 @@ void Plane::init_ardupilot()
 
     // setup frsky
 #if FRSKY_TELEM_ENABLED == ENABLED
-    frsky_telemetry.init(serial_manager);
+    // setup frsky, and pass a number of parameters to the library
+    frsky_telemetry.init(serial_manager, FIRMWARE_STRING,
+                         MAV_TYPE_FIXED_WING,
+                         &g.fs_batt_voltage, &g.fs_batt_mah);
 #endif
 
     mavlink_system.sysid = g.sysid_this_mav;
@@ -355,6 +358,10 @@ void Plane::set_mode(enum FlightMode mode, mode_reason_t reason)
     previous_mode_reason = control_mode_reason;
     control_mode_reason = reason;
 
+#if FRSKY_TELEM_ENABLED == ENABLED
+    frsky_telemetry.update_control_mode(control_mode);
+#endif
+    
     if (previous_mode == AUTOTUNE && control_mode != AUTOTUNE) {
         // restore last gains
         autotune_restore();
@@ -781,17 +788,6 @@ bool Plane::should_log(uint32_t mask)
     return false;
 #endif
 }
-
-/*
-  send FrSky telemetry. Should be called at 5Hz by scheduler
- */
-#if FRSKY_TELEM_ENABLED == ENABLED
-void Plane::frsky_telemetry_send(void)
-{
-    frsky_telemetry.send_frames((uint8_t)control_mode);
-}
-#endif
-
 
 /*
   return throttle percentage from 0 to 100 for normal use and -100 to 100 when using reverse thrust

@@ -43,7 +43,7 @@ enum aux_sw_func {
     AUXSW_CAMERA_TRIGGER =       9, // trigger camera servo or relay
     AUXSW_RANGEFINDER =         10, // allow enabling or disabling rangefinder in flight which helps avoid surface tracking when you are far above the ground
     AUXSW_FENCE =               11, // allow enabling or disabling fence in flight
-    AUXSW_RESETTOARMEDYAW =     12, // changes yaw to be same as when quad was armed
+    AUXSW_RESETTOARMEDYAW =     12, // deprecated.  changes yaw to be same as when quad was armed
     AUXSW_SUPERSIMPLE_MODE =    13, // change to simple mode in middle, super simple at top
     AUXSW_ACRO_TRAINER =        14, // low = disabled, middle = leveled, high = leveled and limited
     AUXSW_SPRAYER =             15, // enable/disable the crop sprayer
@@ -69,6 +69,7 @@ enum aux_sw_func {
     AUXSW_RELAY4 =              36, // Relay4 pin on/off (in Mission planner set CH10_OPT = 36)
     AUXSW_THROW =               37,  // change to THROW flight mode
     AUXSW_AVOID_ADSB =          38,  // enable AP_Avoidance library
+    AUXSW_SWITCH_MAX,
 };
 
 // Frame types
@@ -276,6 +277,11 @@ enum LandStateType {
     LandStateType_Descending = 1
 };
 
+// bit options for DEV_OPTIONS parameter
+enum DevOptions {
+    DevOptionADSBMAVLink = 1,
+};
+
 //  Logging parameters
 #define TYPE_AIRSTART_MSG               0x00
 #define TYPE_GROUNDSTART_MSG            0x01
@@ -401,6 +407,7 @@ enum LandStateType {
 #define ERROR_SUBSYSTEM_TERRAIN             21
 #define ERROR_SUBSYSTEM_NAVIGATION          22
 #define ERROR_SUBSYSTEM_FAILSAFE_TERRAIN    23
+#define ERROR_SUBSYSTEM_EKF_PRIMARY         24
 // general error codes
 #define ERROR_CODE_ERROR_RESOLVED           0
 #define ERROR_CODE_FAILED_TO_INITIALISE     1

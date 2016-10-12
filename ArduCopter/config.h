@@ -259,6 +259,13 @@
  #endif
 #endif
 
+#ifndef COMPASS_CAL_STICK_GESTURE_TIME
+ #define COMPASS_CAL_STICK_GESTURE_TIME 2.0f // 2 seconds
+#endif
+#ifndef COMPASS_CAL_STICK_DELAY
+ #define COMPASS_CAL_STICK_DELAY 5.0f
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 //  OPTICAL_FLOW
 #ifndef OPTFLOW
@@ -274,7 +281,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Crop Sprayer
 #ifndef SPRAYER
- # define SPRAYER  DISABLED
+ # define SPRAYER  ENABLED
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -667,4 +674,8 @@
 //use this to completely disable FRSKY TELEM
 #ifndef FRSKY_TELEM_ENABLED
   #  define FRSKY_TELEM_ENABLED          ENABLED
+#endif
+
+#ifndef ADVANCED_FAILSAFE
+# define ADVANCED_FAILSAFE DISABLED
 #endif
